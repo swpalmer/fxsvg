@@ -2,6 +2,14 @@ plugins {
     id 'java-library'
 }
 
+group 'com.analogideas.fxsvg'
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 repositories {
     mavenCentral()
 }
