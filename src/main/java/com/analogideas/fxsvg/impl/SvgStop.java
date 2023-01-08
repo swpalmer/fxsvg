@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 scott.
+ * Copyright 2023 Scott W. Palmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.analogideas.fxsvg;
+package com.analogideas.fxsvg.impl;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
@@ -22,22 +22,22 @@ import javafx.scene.paint.Stop;
  *
  * @author scott
  */
-class SvgStop implements SvgObjWithId {
+public class SvgStop implements SvgObjWithId {
     
     String id;
     double offset;
     double opacity = 1.0;
     String color= "#000";
 
-    void setOffset(double offset) {
+    public void setOffset(double offset) {
         this.offset = offset;
     }
 
-    void setColor(String color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
-    void setOpacity(double opacity) {
+    public void setOpacity(double opacity) {
         this.opacity = opacity;
     }
 

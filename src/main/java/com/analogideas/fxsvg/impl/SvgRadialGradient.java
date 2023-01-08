@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 scott.
+ * Copyright 2023 Scott W. Palmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.analogideas.fxsvg;
+package com.analogideas.fxsvg.impl;
 
+import com.analogideas.fxsvg.SVGReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import javafx.scene.transform.Transform;
  *
  * @author scott
  */
-class SvgRadialGradient implements SvgContainer, SvgObjWithId {
+public class SvgRadialGradient implements SvgContainer, SvgObjWithId {
     Map<String, Object> defs;
     List<Stop> stops = new ArrayList<>();
     String id;
@@ -100,40 +101,40 @@ class SvgRadialGradient implements SvgContainer, SvgObjWithId {
         return gradient;
     }
 
-    void setFx(double fx) {
+    public void setFx(double fx) {
         this.fx = fx;
     }
 
-    void setFy(double fy) {
+    public void setFy(double fy) {
         this.fy = fy;
     }
 
-    void setCx(double cx) {
+    public void setCx(double cx) {
         this.cx = cx;
     }
 
-    void setCy(double cy) {
+    public void setCy(double cy) {
         this.cy = cy;
     }
 
-    void setR(double r) {
+    public void setR(double r) {
         this.r = r;
     }
     
-    void setCycleMethod(CycleMethod cycle) {
+    public void setCycleMethod(CycleMethod cycle) {
         this.cycle = cycle;
     }
     
-    void setProportional(boolean prop) {
+    public void setProportional(boolean prop) {
         this.proportional = prop;
     }
     
-    void setTransform(String transform) {
+    public void setTransform(String transform) {
         this.transform = transform;
     }
 
-    // currently only used for stops
-    void setHref(String href) {
+    // currently only used to inherit stops
+    public void setHref(String href) {
         this.href = href;
     }
 

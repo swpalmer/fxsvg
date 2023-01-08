@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 scott.
+ * Copyright 2023 Scott W. Palmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.analogideas.fxsvg;
-
-import javafx.scene.Node;
+package com.analogideas.fxsvg.impl;
 
 /**
  *
  * @author scott
  */
-class SvgNode implements SvgData, SvgObjWithId {
-    
-    Node node;
+public interface SvgContainer extends SvgData {
 
-    public SvgNode(Node node) {
-        this.node = node;
-    }
-
-    public Node node() {
-        return node;
-    }
-
-    @Override
-    public void id(String id) {
-        node.setId(id);
-    }
-
-    @Override
-    public String id() {
-        return node().getId();
-    }
-
-    @Override
-    public Object obj() {
-        return node();
-    }
+    void add(SvgData svgObj);
     
 }

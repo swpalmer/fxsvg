@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 scott.
+ * Copyright 2023 Scott W. Palmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.analogideas.fxsvg;
+package com.analogideas.fxsvg.impl;
+
+import java.util.Map;
+
 
 /**
  *
  * @author scott
  */
-interface SvgData {}
+public record SvgDef(Map<String,Object> map) implements SvgContainer {
+
+    @Override
+    public void add(SvgData svgObj) {
+        if (svgObj instanceof SvgObjWithId oid) {
+            map().put(oid.id(), oid.obj());
+        } else {
+            throw new RuntimeException("Can't add a " + svgObj.getClass().getName() + " it has no id.");
+        }
+    }
+}

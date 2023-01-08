@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 scott.
+ * Copyright 2023 Scott W. Palmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.analogideas.fxsvg;
+package com.analogideas.fxsvg.impl;
 
+import com.analogideas.fxsvg.SVGReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import javafx.scene.transform.Transform;
  *
  * @author scott
  */
-class SvgLinearGradient implements SvgContainer, SvgObjWithId {
+public class SvgLinearGradient implements SvgContainer, SvgObjWithId {
     private Map<String, Object> defs;
     List<Stop> stops = new ArrayList<>();
     String id;
@@ -84,36 +85,36 @@ class SvgLinearGradient implements SvgContainer, SvgObjWithId {
         return gradient;
     }
 
-    void setX1(double x1) {
+    public void setX1(double x1) {
         this.x1 = x1;
     }
 
-    void setY1(double y1) {
+    public void setY1(double y1) {
         this.y1 = y1;
     }
 
-    void setX2(double x2) {
+    public void setX2(double x2) {
         this.x2 = x2;
     }
 
-    void setY2(double y2) {
+    public void setY2(double y2) {
         this.y2 = y2;
     }
     
-    void setCycleMethod(CycleMethod cycle) {
+    public void setCycleMethod(CycleMethod cycle) {
         this.cycle = cycle;
     }
     
-    void setTransform(String transform) {
+    public void setTransform(String transform) {
         this.transform = transform;
     }
     
-    void setProportional(boolean prop) {
+    public void setProportional(boolean prop) {
         this.proportional = prop;
     }
     
-    // currently only used for stops
-    void setHref(String href) {
+    // currently only used to inherit stops
+    public void setHref(String href) {
         this.href = href;
     }
 }
