@@ -17,16 +17,18 @@ package com.analogideas.fxsvg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.transform.Transform;
 
 /**
  *
  * @author scott
  */
 class SvgLinearGradient implements SvgContainer, SvgObjWithId {
-    
+    private Map<String, Object> defs;
     List<Stop> stops = new ArrayList<>();
     String id;
     double x1;
@@ -35,10 +37,16 @@ class SvgLinearGradient implements SvgContainer, SvgObjWithId {
     double y2;
     CycleMethod cycle = CycleMethod.NO_CYCLE;
     String transform;
+    String href;
+    boolean proportional = true;
+
+    public SvgLinearGradient(Map<String, Object> defs) {
+        this.defs = defs; // to resolve hrefs
+    }
+    
     
     @Override
     public void add(SvgData svgObj) {
-        //System.out.println("Adding to LinearGradient: " + svgObj);
         if (svgObj instanceof SvgStop svgStop) {
             stops.add((Stop) svgStop.obj());
         }
@@ -57,9 +65,22 @@ class SvgLinearGradient implements SvgContainer, SvgObjWithId {
     @Override
     public Object obj() {
         if (transform != null) {
-            // TODO transform x1,y1, x2,y2
+            // deal with gradient transform
+            Transform t = SVGReader.transformsFromString(transform);
+            var p1 = t.transform(x1, y1);
+            x1 = p1.getX();
+            y1 = p1.getY();
+            var p2 = t.transform(x2, y2);
+            x2 = p2.getX();
+            y2 = p2.getY();
         }
-        LinearGradient gradient = new LinearGradient(x1, y1, x2, y2, true, cycle, stops);
+        if (stops.isEmpty() && href != null) {
+            Object other = defs.get(href);
+            if (other instanceof LinearGradient otherGrad) {
+                stops.addAll(otherGrad.getStops());
+            }
+        }
+        LinearGradient gradient = new LinearGradient(x1, y1, x2, y2, proportional, cycle, stops);
         return gradient;
     }
 
@@ -85,5 +106,14 @@ class SvgLinearGradient implements SvgContainer, SvgObjWithId {
     
     void setTransform(String transform) {
         this.transform = transform;
+    }
+    
+    void setProportional(boolean prop) {
+        this.proportional = prop;
+    }
+    
+    // currently only used for stops
+    void setHref(String href) {
+        this.href = href;
     }
 }

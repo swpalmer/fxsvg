@@ -27,7 +27,7 @@ class SvgStop implements SvgObjWithId {
     String id;
     double offset;
     double opacity = 1.0;
-    String color;
+    String color= "#000";
 
     void setOffset(double offset) {
         this.offset = offset;
@@ -55,9 +55,14 @@ class SvgStop implements SvgObjWithId {
     public Object obj() {
         if (opacity != 1.0) {
             javafx.scene.paint.Color c = Color.valueOf(color);
-            return c.deriveColor(0, 1.0, 1.0, opacity);
+            c = c.deriveColor(0, 1.0, 1.0, opacity);
+            return new Stop(offset, c);
         }
         return new Stop(offset, Color.valueOf(color));
     }
-    
+
+    @Override
+    public String toString() {
+        return "<stop offset=\""+offset+"\" stop-opacity=\""+opacity+"\" stop-color=\""+color+"\" />";
+    }
 }

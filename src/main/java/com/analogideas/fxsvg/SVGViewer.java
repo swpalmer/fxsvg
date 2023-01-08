@@ -6,22 +6,21 @@
 package com.analogideas.fxsvg;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -32,7 +31,22 @@ import javafx.stage.Stage;
 public class SVGViewer extends Application {
     
     String [] TEST_PATHS = {
-        "/Users/scott/Downloads/1669708251wallet-and-credit-cards.svg",
+//        "/Users/scott/Downloads/Arms_of_New_Brunswick.svg",
+//        "/Users/scott/Downloads/broken-heart-svgrepo-com.svg",
+//        "/Users/scott/Downloads/carbon.svg",
+//        "/Users/scott/Downloads/check-mark-svgrepo-com.svg",
+//        "/Users/scott/Downloads/folded-hands-skin-2-svgrepo-com.svg",
+//        "/Users/scott/Downloads/glasses-svgrepo-com.svg",
+//        "/Users/scott/Downloads/mercurial-logo-icon.svg",
+//        "/Users/scott/Downloads/myAvatar.svg",
+//        "/Users/scott/Downloads/redhurricane-lamp.svg",
+//        "/Users/scott/Downloads/safari-pinned-tab.svg",
+//        "/Users/scott/Downloads/waving-hand-skin-4-svgrepo-com.svg",
+//        "/Users/scott/Downloads/woozy-face-svgrepo-com.svg",
+//        "/Users/scott/Downloads/writing-hand-skin-3-svgrepo-com.svg",
+//        "/Users/scott/Downloads/writing-hand-skin-4-svgrepo-com.svg",
+//        "/Users/scott/Downloads/zany-face-svgrepo-com.svg",
+//        "/Users/scott/Downloads/1669708251wallet-and-credit-cards.svg",
 //        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F4E6.svg",
 //        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F3D7.svg",
 //        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F511.svg",
@@ -58,27 +72,35 @@ public class SVGViewer extends Application {
         List<File> svgFiles;
         List<String> filePaths = params.getUnnamed();
         if (filePaths.isEmpty()) {
-            svgFiles = Arrays.stream(TEST_PATHS).map(File::new).toList();
-
-//            FileChooser fc = new FileChooser();
-//            svgFiles = fc.showOpenMultipleDialog(primaryStage);
+            if (TEST_PATHS.length > 0) {
+                // uncomment or add to the test paths to quickly see test cases
+                svgFiles = Arrays.stream(TEST_PATHS).map(File::new).toList();
+            } else {
+                FileChooser fc = new FileChooser();
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Scalable Vector Graphics", "*.svg", "*.SVG"));
+                svgFiles = fc.showOpenMultipleDialog(primaryStage);
+            }
         } else {
             svgFiles = filePaths.stream().map(File::new).toList();
         }
-        Slider slider = new Slider(0.05, 10, 1);
+        Slider slider = new Slider(-50.0, 150, 0.0);
         slider.setMaxWidth(Double.MAX_VALUE);
+        
+        NumberBinding scaleProp = Bindings.when(Bindings.lessThan(slider.valueProperty(), 0))
+                .then(Bindings.divide(Bindings.add(50.0,slider.valueProperty()),50.0))
+                .otherwise(
+                    Bindings.when(Bindings.greaterThan(slider.valueProperty(), 0))
+                        .then(Bindings.add(1.0, Bindings.multiply(slider.valueProperty(),0.1)))
+                        .otherwise(1.0)
+                );
+        
+        HBox.setHgrow(slider, Priority.ALWAYS);
         for (File svgFile : svgFiles) {
+            System.out.println(svgFile);
             SVGReader svgReader = new SVGReader(svgFile);
             Group svgImg = svgReader.buildNode();
-            if (svgImg.getChildren().size() == 1) {
-                Node root = svgImg.getChildren().get(0);
-                System.out.println("SVG defined a single root object: id="+root.getId());
-                for (Transform tf : root.getTransforms()) {
-                    System.out.println("Root transform: "+ tf);
-                }
-            }
-            svgImg.scaleXProperty().bind(slider.valueProperty());
-            svgImg.scaleYProperty().bind(slider.valueProperty());
+            svgImg.scaleXProperty().bind(scaleProp);
+            svgImg.scaleYProperty().bind(scaleProp);
             Group wrap = new Group(svgImg);
             box.getChildren().add(wrap);
         }

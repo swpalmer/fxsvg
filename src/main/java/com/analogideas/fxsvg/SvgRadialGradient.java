@@ -17,6 +17,7 @@ package com.analogideas.fxsvg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
@@ -27,7 +28,7 @@ import javafx.scene.transform.Transform;
  * @author scott
  */
 class SvgRadialGradient implements SvgContainer, SvgObjWithId {
-    
+    Map<String, Object> defs;
     List<Stop> stops = new ArrayList<>();
     String id;
     double fx;
@@ -38,6 +39,11 @@ class SvgRadialGradient implements SvgContainer, SvgObjWithId {
     boolean proportional = true;
     CycleMethod cycle = CycleMethod.NO_CYCLE;
     String transform;
+    String href;
+
+    public SvgRadialGradient(Map<String, Object> defs) {
+        this.defs = defs;
+    }
     
 
     @Override
@@ -59,20 +65,28 @@ class SvgRadialGradient implements SvgContainer, SvgObjWithId {
 
     @Override
     public Object obj() {
+        if (stops.isEmpty() && href != null) {
+            Object other = defs.get(href);
+            if (other instanceof RadialGradient otherGrad) {
+                stops.addAll(otherGrad.getStops());
+            }
+        }
+
         if (transform != null) {
             // deal with gradient transform
-            List<Transform> transforms = SVGReader.transformListFromString(transform);
-            for (Transform t : transforms) {
-                var cp = t.transform(cx, cy);
-                cx = cp.getX();
-                cy = cp.getY();
-                var fp = t.transform(fx, fy);
-                fx = fp.getX();
-                fy = fp.getY();
-                r = t.transform(r, 0).getX();
-            }
-            r = r-cx;
-            System.out.println("After transform: cx="+cx+", cy="+cy+", fx="+fx+", fy="+fy+", r="+r);
+            Transform t = SVGReader.transformsFromString(transform);
+            var cp = t.transform(cx, cy);
+            cx = cp.getX(); 
+            cy = cp.getY();
+            var fp = t.transform(fx, fy);
+            fx = fp.getX();
+            fy = fp.getY();
+            var po = t.transform(0, 0); // transform origin so we can calc new 'r'
+            var pr = t.transform(r, 0); // since 'r' should only be scaled
+            var drx = pr.getX()-po.getX();
+            var dry = pr.getY()-po.getY();
+            r = Math.sqrt(drx*drx+dry*dry);
+            //System.out.println("After transform: cx="+cx+", cy="+cy+", fx="+fx+", fy="+fy+", r="+r);
         }
         // convert fx,fy to polar coords.
         double dx = fx-cx;
@@ -117,4 +131,10 @@ class SvgRadialGradient implements SvgContainer, SvgObjWithId {
     void setTransform(String transform) {
         this.transform = transform;
     }
+
+    // currently only used for stops
+    void setHref(String href) {
+        this.href = href;
+    }
+
 }
