@@ -21,7 +21,7 @@ import javafx.scene.Node;
  *
  * @author scott
  */
-public class SvgNode implements SvgData, SvgObjWithId {
+public class SvgNode implements SvgObjWithId {
     
     Node node;
 

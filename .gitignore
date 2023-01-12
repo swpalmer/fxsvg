@@ -3,3 +3,6 @@
 
 # Ignore Gradle build output directory
 build
+
+#Ignore the directory that the idiotic VSCode plugin adds because it is too stupid to use the already known build folder
+bin

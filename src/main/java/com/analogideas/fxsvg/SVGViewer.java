@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.geometry.Pos;
@@ -42,34 +41,22 @@ import javafx.stage.Stage;
 public class SVGViewer extends Application {
     
     String [] TEST_PATHS = {
-//        "/Users/scott/Downloads/Arms_of_New_Brunswick.svg",
-//        "/Users/scott/Downloads/broken-heart-svgrepo-com.svg",
-//        "/Users/scott/Downloads/carbon.svg",
-//        "/Users/scott/Downloads/check-mark-svgrepo-com.svg",
-//        "/Users/scott/Downloads/folded-hands-skin-2-svgrepo-com.svg",
-//        "/Users/scott/Downloads/glasses-svgrepo-com.svg",
-//        "/Users/scott/Downloads/mercurial-logo-icon.svg",
-//        "/Users/scott/Downloads/myAvatar.svg",
-//        "/Users/scott/Downloads/redhurricane-lamp.svg",
-//        "/Users/scott/Downloads/safari-pinned-tab.svg",
-//        "/Users/scott/Downloads/waving-hand-skin-4-svgrepo-com.svg",
-//        "/Users/scott/Downloads/woozy-face-svgrepo-com.svg",
-//        "/Users/scott/Downloads/writing-hand-skin-3-svgrepo-com.svg",
-//        "/Users/scott/Downloads/writing-hand-skin-4-svgrepo-com.svg",
-//        "/Users/scott/Downloads/zany-face-svgrepo-com.svg",
-//        "/Users/scott/Downloads/1669708251wallet-and-credit-cards.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F4E6.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F3D7.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F511.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F512.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F527.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F529.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F6D1.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1F9F0.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/1FAB2.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/23F1.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/2699.svg",
-//        "/Users/scott/dev/Personal/Grade/src/main/resources/com/analogideas/grade/ui/26A1.svg"
+        "./src/test/resources/1669708251wallet-and-credit-cards.svg",
+        "./src/test/resources/Arms_of_New_Brunswick.svg",
+        "./src/test/resources/broken-heart-svgrepo-com.svg",
+        "./src/test/resources/carbon.svg",
+        "./src/test/resources/check-mark-svgrepo-com.svg",
+        "./src/test/resources/folded-hands-skin-2-svgrepo-com.svg",
+        "./src/test/resources/glasses-svgrepo-com.svg",
+        "./src/test/resources/mercurial-logo-icon.svg",
+        "./src/test/resources/myAvatar.svg",
+        "./src/test/resources/parcel.svg",
+        "./src/test/resources/redhurricane-lamp.svg",
+        "./src/test/resources/waving-hand-skin-4-svgrepo-com.svg",
+        "./src/test/resources/woozy-face-svgrepo-com.svg",
+        "./src/test/resources/writing-hand-skin-3-svgrepo-com.svg",
+        "./src/test/resources/writing-hand-skin-4-svgrepo-com.svg",
+        "./src/test/resources/zany-face-svgrepo-com.svg",
     };
     public static void main(String[] args) {
         launch(args);

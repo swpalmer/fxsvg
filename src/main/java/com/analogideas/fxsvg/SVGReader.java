@@ -380,30 +380,33 @@ public class SVGReader {
     }
     
     private void processLinearGradientAttributes(SvgLinearGradient grad, XMLStreamReader svgStream) {
-        grad.setProportional(false);
+        boolean usedPercent = false;
         final int attrCount = svgStream.getAttributeCount();
         for (int i = 0; i < attrCount; i++) {
             String attrName = svgStream.getAttributeLocalName(i);
             String value = svgStream.getAttributeValue(i);
+            if (value.endsWith("%")) {
+                usedPercent = true;
+            }
             switch (attrName) {
                 case "x1":
-                    grad.setX1(Double.parseDouble(value));
+                    grad.setX1(parseValue(value));
                     break;
                 case "y1":
-                    grad.setY1(Double.parseDouble(value));
-                    break;
+                grad.setY1(parseValue(value));
+                break;
                 case "x2":
-                    grad.setX2(Double.parseDouble(value));
-                    break;
+                grad.setX2(parseValue(value));
+                break;
                 case "y2":
-                    grad.setY2(Double.parseDouble(value));
+                    grad.setY2(parseValue(value));
                     break;
-                case "gradientUnits":
+                    case "gradientUnits":
                     break;
-                case "gradientTransform":
+                    case "gradientTransform":
                     grad.setTransform(value);
                     break;
-                case "spreadMethod":
+                    case "spreadMethod":
                     CycleMethod cycle = switch(value) {
                         default -> CycleMethod.NO_CYCLE;
                         case "pad" -> CycleMethod.NO_CYCLE;
@@ -413,39 +416,43 @@ public class SVGReader {
                     grad.setCycleMethod(cycle);
                     break;
                 case "href":
-                    if (value.startsWith("#")) {
-                        grad.setHref(value.substring(1));
-                    }
-                    break;
+                if (value.startsWith("#")) {
+                    grad.setHref(value.substring(1));
+                }
+                break;
                 case "id":
-                    String id = value;
-                    grad.id(id);
-                    break;
+                String id = value;
+                grad.id(id);
+                break;
             }
         }
+        grad.setProportional(usedPercent); // dumb heuristic
     }
 
     private void processRadialGradientAttributes(SvgRadialGradient grad, XMLStreamReader svgStream) {
         final int attrCount = svgStream.getAttributeCount();
-        grad.setProportional(false);
+        boolean usedPercent = false;
         for (int i = 0; i < attrCount; i++) {
             String attrName = svgStream.getAttributeLocalName(i);
             String value = svgStream.getAttributeValue(i);
+            if (value.endsWith("%")) {
+                usedPercent = true;
+            }
             switch (attrName) {
                 case "fx":
-                    grad.setFx(Double.parseDouble(value));
+                    grad.setFx(parseValue(value));
                     break;
                 case "fy":
-                    grad.setFy(Double.parseDouble(value));
+                    grad.setFy(parseValue(value));
                     break;
                 case "cx":
-                    grad.setCx(Double.parseDouble(value));
+                    grad.setCx(parseValue(value));
                     break;
                 case "cy":
-                    grad.setCy(Double.parseDouble(value));
+                    grad.setCy(parseValue(value));
                     break;
                 case "r":
-                    grad.setR(Double.parseDouble(value));
+                    grad.setR(parseValue(value));
                     break;
                 case "gradientUnits":
                     break;
@@ -474,6 +481,7 @@ public class SVGReader {
                     LOGGER.log(logLevel, () -> "Ignoring style: "+attrName+':'+value);
             }
         }
+        grad.setProportional(usedPercent); // dumb heuristic
     }
     
     private void processGradientStopAttributes(SvgStop svgStop, XMLStreamReader svgStream) {
@@ -484,7 +492,7 @@ public class SVGReader {
             //System.out.println("attr: " + attrName + ", value: " + value);
             switch (attrName) {
                 case "offset":
-                    svgStop.setOffset(Double.parseDouble(value));
+                    svgStop.setOffset(parseValue(value)); // can be a percentage
                     break;
                 case "style": // e.g. stop-opacity:1;stop-color:#27aae1
                 {
@@ -959,6 +967,13 @@ public class SVGReader {
         }
         // for text font-family, font-size, ...
         // posisble transforms... etc
+    }
+
+    double parseValue(String value) {
+        if (value.endsWith("%")) {
+            return Double.parseDouble(value.substring(0, value.length()-1)) / 100.0;
+        }
+        return Double.parseDouble(value);
     }
 
     double sizeFromAttr(String value) {
