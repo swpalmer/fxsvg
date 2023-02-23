@@ -549,6 +549,16 @@ public class SVGReader {
                         LOGGER.log(logLevel, () -> attrName+" ignored, Node is not a Shape: "+node.getClass().getName());
                     }
                     break;
+                case "clip-rule": // fall-through
+                case "fill-rule":
+                    if (node instanceof SVGPath path) {
+                        if ("evenodd".equals(value)) {
+                            path.setFillRule(FillRule.EVEN_ODD);
+                        } else if ("nonzero".equals(value)) {
+                            path.setFillRule(FillRule.NON_ZERO);
+                        }
+                    }
+                    break;
                 case "stroke":
                     if (node instanceof Shape shape) {
                         deferredValues.add(new DeferredStroke(shape, value, defs));
@@ -593,7 +603,8 @@ public class SVGReader {
                     break;
                 case "fill-opacity":
                 case "stroke-opacity":
-                    // TODO: tweak colour
+                    // TODO: tweak colour - could lookup DeferredFill/DeferredStroke for this shape and replace
+                    // with a version that also takes opacity into account
                     LOGGER.log(logLevel, "fill-opacity and stroke-opacity are not supported yet.");
                     break;
                 case "opacity":
